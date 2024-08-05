@@ -1,15 +1,14 @@
 import pygame
 import sys
 from ball import Ball
+from ground import Ground
 from enum import Enum
-
-# 1 meter = 100 units
 
 # Initialize Pygame
 pygame.init()
 
-# Set up the display
-SCREEN_WIDTH = 800
+# Configure display
+SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Simple Pygame Program')
@@ -22,7 +21,9 @@ white = (255, 255, 255)
 clock = pygame.time.Clock()
 
 # Initialize Object
-ball = Ball(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 15, white)
+ball1 = Ball(0, 0, 50, white)
+ball2 = Ball(SCREEN_WIDTH, SCREEN_HEIGHT, 100, (42, 67, 29))
+ground = Ground(0, SCREEN_HEIGHT-100, SCREEN_WIDTH, 20, (145, 35, 76))
 
 # Main game loop
 running = True
@@ -35,10 +36,13 @@ while running:
     screen.fill(black)
 
     # Main Content
-    ball.update(SCREEN_WIDTH, SCREEN_HEIGHT)
+    ball1.update(SCREEN_WIDTH, SCREEN_HEIGHT, "right", ball2)
+    ball2.update(SCREEN_WIDTH, SCREEN_HEIGHT, "left", ball1)
 
-    # Draw a white rectangle
-    ball.draw(screen)
+    # Draw objects
+    ball1.draw(screen)
+    ball2.draw(screen)
+    #ground.draw(screen)
 
     # Update the display
     pygame.display.flip()

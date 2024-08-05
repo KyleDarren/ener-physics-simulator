@@ -1,6 +1,6 @@
 # 1 meter = 1 units
 import pygame
-
+import math
 
 class Ball:
     def __init__(self, x, y, radius, color):
@@ -16,11 +16,17 @@ class Ball:
         self.last_time = pygame.time.get_ticks()
         
 
-    def update(self, screen_width, screen_height):
-        self.y += self.velocity_y
+    def update(self, screen_width, screen_height, direction, circle):
+        if direction == "right":
+            self.x += .5
+            self.y += .5
+        elif direction == "left":
+            self.x -= .5
+            self.y -= .5
+        #self.y += self.velocity_y
         # self.border_collision_detection(screen_width, screen_height)
-
-        self.allow_gravity()
+        self.circle_collision(circle)
+        #self.allow_gravity()
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
@@ -46,5 +52,14 @@ class Ball:
         elif self.y - self.radius < 0:
             self.velocity_y = -self.velocity_y
 
+    def circle_collision(self, circle):
+        live_distance = abs(math.sqrt(((circle.x - self.x)**2) + ((circle.y - self.y)**2)))
+        reference_distance = self.radius + circle.radius
+        if live_distance < reference_distance:
+            self.color = (189, 222, 12)
+            print("collided")
+        else:
+            print("not collided")
+            self.color = (211, 211, 211)
     
         
