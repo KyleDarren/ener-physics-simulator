@@ -55,20 +55,21 @@ class Ball:
         reference_distance = self.radius + circle.radius
         if live_distance < reference_distance:
             self.color = (189, 222, 12)
-            #self.x = circle.x + abs(self.x - circle.x)
-            if self.velocity_y < 0:
-                self.y = circle.y + abs(self.y - circle.y)
-            elif self.velocity_y > 0:
-                self.y = circle.y - abs(self.y - circle.y)
-            elif self.velocity_x < 0:
-                self.x = circle.x + abs(self.x - circle.x)
-            elif self.velocity_x > 0:
-                self.x = circle.x - abs(self.x - circle.x)
+            self.velocity_y = -self.velocity_y
+            self.velocity_x = -self.velocity_x
+            # #self.x = circle.x + abs(self.x - circle.x)
+            # if self.velocity_y < 0:
+            #     self.y = circle.y + abs(self.y - circle.y)
+            # elif self.velocity_y > 0:
+            #     self.y = circle.y - abs(self.y - circle.y)
+            # elif self.velocity_x < 0:
+            #     self.x = circle.x + abs(self.x - circle.x)
+            # elif self.velocity_x > 0:
+            #     self.x = circle.x - abs(self.x - circle.x)
 
 
             
-            self.velocity_y = -self.velocity_y
-            self.velocity_x = -self.velocity_x
+            
             #print("collided")
         else:
             #print("not collided")
@@ -85,6 +86,11 @@ class Ball:
             self.velocity_y = velocity_final
             if abs(self.velocity_y) < (10.5714 * ((self.e)**2)) - (12.06 * (self.e)) + 3.7386:  # Approximated Small threshold formula
                 self.velocity_y = 0
+
+    def check_overlap(self, circle):
+        live_distance = abs(math.sqrt(((circle.x - self.x)**2) + ((circle.y - self.y)**2)))
+        reference_distance = self.radius + circle.radius
+        return live_distance < reference_distance
 
     def progress_bar(self, screen, y):
         pygame.draw.rect(screen, self.color, (10, y-150-abs(self.velocity_y*10), 50, abs(self.velocity_y*10)))

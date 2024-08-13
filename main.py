@@ -28,8 +28,28 @@ ball3 = Ball(SCREEN_WIDTH-300, 100, 20, white)
 
 ball_array = []
 
-for i in range(0, 50):
-    ball_array.append(Ball(random.randint(0, SCREEN_WIDTH), random.randint(0, SCREEN_HEIGHT-100), 20, white))
+def spawn_balls(existing_balls):
+    random_x = random.randint(25, SCREEN_WIDTH-25)
+    random_y = random.randint(25, SCREEN_HEIGHT-100)
+    new_ball = Ball(random_x, random_y, 25, white)
+
+    if len(existing_balls) == 0:
+        print("helk")
+        return new_ball
+    elif len(existing_balls) > 0: 
+        overlap = any(new_ball.check_overlap(existing_ball) for existing_ball in existing_balls)
+        if not overlap:
+            return new_ball
+        return None
+
+
+for i in range(0, 20):
+    new_ball = None
+    while new_ball is None:  # Keep trying until a new ball is successfully created
+        new_ball = spawn_balls(ball_array)
+    ball_array.append(new_ball) 
+    
+
 #ball2 = Ball(SCREEN_WIDTH/4, 0, 100, (42, 67, 29))
 ground = Ground(0, SCREEN_HEIGHT-100, SCREEN_WIDTH, 20, (145, 35, 76))
 
@@ -45,12 +65,12 @@ while running:
 
 
     for i in ball_array:
+        for j in ball_array:
+            if j != i:
+                i.circle_collision(j)
         i.update(SCREEN_WIDTH, SCREEN_HEIGHT)
         i.ground_collision(ground)
         i.draw(screen)
-        for j in ball_array:
-            if i != j:
-                i.circle_collision(j)
 
     # # Main Content
     # ball1.update(SCREEN_WIDTH, SCREEN_HEIGHT)
