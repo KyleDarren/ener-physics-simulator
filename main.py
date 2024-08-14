@@ -2,7 +2,6 @@ import pygame
 import sys
 from ball import Ball
 from ground import Ground
-from enum import Enum
 import random
 
 # Initialize Pygame
@@ -21,41 +20,47 @@ white = (255, 255, 255)
 # Set up a clock to control the frame rate
 clock = pygame.time.Clock()
 
-# Initialize Object
-ball1 = Ball(SCREEN_WIDTH-100, 100, 20, white)
-ball2 = Ball(SCREEN_WIDTH-200, 100, 20, white)
-ball3 = Ball(SCREEN_WIDTH-300, 100, 20, white)
-
+# Container array for created balls
 ball_array = []
 
+# Create ball function
 def spawn_balls(existing_balls):
+    # Set variables for random x and y
     random_x = random.randint(25, SCREEN_WIDTH-25)
     random_y = random.randint(25, SCREEN_HEIGHT-100)
+
+    # Create a ball
     new_ball = Ball(random_x, random_y, 25, white)
 
+    # Return the created ball if there still no existing balls inside the ball array
     if len(existing_balls) == 0:
-        print("helk")
         return new_ball
-    elif len(existing_balls) > 0: 
+    elif len(existing_balls) > 0:
+        # Check if the created circle overlaps an existing circle
         overlap = any(new_ball.check_overlap(existing_ball) for existing_ball in existing_balls)
+        # Return the created ball if and only if it doesn't overlap any existing balls
         if not overlap:
             return new_ball
+        # If it does overlap, return None
         return None
 
 
 for i in range(0, 20):
     new_ball = None
-    while new_ball is None:  # Keep trying until a new ball is successfully created
-        new_ball = spawn_balls(ball_array)
+    while new_ball is None:  
+        # While the ball is None it continually assign the spawn_balls() function in the new_ball variable 
+        # until it returns a Ball Object and terminates the while loop
+        new_ball = spawn_balls(ball_array) # It continually return None as long as thers is an overlap
+    # If it return a Ball object and not None, it will be appended into the ball_arrau
     ball_array.append(new_ball) 
     
-
-#ball2 = Ball(SCREEN_WIDTH/4, 0, 100, (42, 67, 29))
+# Initialize ground
 ground = Ground(0, SCREEN_HEIGHT-100, SCREEN_WIDTH, 20, (145, 35, 76))
 
 # Main game loop
 running = True
 while running:
+    # Handle the events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -63,44 +68,17 @@ while running:
     # Fill the screen with black
     screen.fill(black)
 
-
-    for i in ball_array:
-        for j in ball_array:
-            if j != i:
+    # Draw and update each of the created balls
+    for i in ball_array: # Iterate the ball array
+        for j in ball_array: # By each iteration, iterate the ball array again,
+            if j != i: # If the ball object is not equal on itself, call the circle_collision method
                 i.circle_collision(j)
         i.update(SCREEN_WIDTH, SCREEN_HEIGHT)
         i.ground_collision(ground)
         i.draw(screen)
 
-    # # Main Content
-    # ball1.update(SCREEN_WIDTH, SCREEN_HEIGHT)
-    # #ball2.update(SCREEN_WIDTH, SCREEN_HEIGHT, ball1)
-    # ball1.ground_collision(ground)
-
-    # ball2.update(SCREEN_WIDTH, SCREEN_HEIGHT)
-    # #ball2.update(SCREEN_WIDTH, SCREEN_HEIGHT, ball1)
-    # ball2.ground_collision(ground)
-
-    # ball3.update(SCREEN_WIDTH, SCREEN_HEIGHT)
-    # #ball2.update(SCREEN_WIDTH, SCREEN_HEIGHT, ball1)
-    # ball3.ground_collision(ground)
-    # #ball2.ground_collision(ground)
-    # #ball1.progress_bar(screen, SCREEN_HEIGHT)
-
-    # # Draw objects
-    # ball1.draw(screen)
-    # ball2.draw(screen)
-    # ball3.draw(screen)
-
-    # ball1.circle_collision(ball2)
-    # ball1.circle_collision(ball3)
-    # ball2.circle_collision(ball1)
-    # ball2.circle_collision(ball3)
-    # ball3.circle_collision(ball1)
-    # ball3.circle_collision(ball2)
-    #ball2.draw(screen)
+    # Draw the ground
     ground.draw(screen)
-    #ground.draw(screen)
 
     # Update the display
     pygame.display.flip()

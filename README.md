@@ -8,3 +8,10 @@ The circle collision detection is done by comparing the current distance of the 
 2. Ground Collision Detection
 
 3. Inelastic collision
+
+## Problem
+1. Pixel Penetration
+
+See more information in the source code comments
+
+TABANG!!!
